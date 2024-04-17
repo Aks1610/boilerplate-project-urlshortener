@@ -7,6 +7,7 @@ var mongoose = require('mongoose');
 var shortId = require('shortid');
 var bodyParser = require('body-parser');
 var validUrl = require('valid-url');
+const dns = require('dns');
 require('dotenv').config();
 const cors = require('cors');
 const app = express();
@@ -61,9 +62,13 @@ app.post('/api/shorturl/', async function (req, res) {
   console.log(url);
 
   //Check for valid url
-  if (!validUrl.isWebUri(url)) {
+  // if (!validUrl.isWebUri(url)) {
+  //   res.status(401).json({
+  //     error: "invalid URL"
+  //   })
+  if(dns.lookup(url, (err, addresses) => console.log(err))){
     res.status(401).json({
-      error: "invalid URL"
+      error: "Invalid URL"
     })
   } else {
     try {
